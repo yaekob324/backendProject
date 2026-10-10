@@ -33,3 +33,21 @@ export async function findUserByEmail(
 
   return result.rows[0] ?? null;
 }
+export type CurrentUser = {
+  id: string;
+  email: string;
+  created_at: Date;
+};
+
+export async function findUserById(
+  userId: string
+): Promise<CurrentUser | null> {
+  const result = await pool.query<CurrentUser>(
+    `SELECT id, email, created_at
+     FROM users
+     WHERE id = $1`,
+    [userId]
+  );
+
+  return result.rows[0] ?? null;
+}

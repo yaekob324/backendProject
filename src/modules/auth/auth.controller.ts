@@ -1,7 +1,7 @@
 import { createUser, findUserByEmail } from "./auth.repository";
 import {hashPassword, checkEmailExists, comparePasswords} from "./auth.service";
 import type { Request, Response } from "express";
-
+import {findUserById} from "./auth.repository";
 
 export async function login(req: Request, res: Response) {
   const { email, password } = req.body;
@@ -55,6 +55,22 @@ export function logout(req: Request, res: Response) {
     })
   })
 }   
-export function me(req: Request, res: Response) {
-  res.json({ message: "User profile" });
-}   
+export async function me(req: Request, res: Response) {
+const userId = req.session.userId;
+      if (!userId) {
+    return res.status(401).json({
+      error: "Unauthorized"
+    });
+  }
+  const user = await findUserById(userId);
+
+  if (!user) {
+    return res.status(404).json({
+      error: "User not found"
+    });
+  }
+
+  return res.status(200).json({
+    user
+  });
+} 
