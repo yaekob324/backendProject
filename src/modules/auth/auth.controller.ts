@@ -1,6 +1,4 @@
-import {pool} from "../../db/pool";
 import { createUser, findUserByEmail } from "./auth.repository";
-import {findEmail} from "./auth.repository";
 import {hashPassword, checkEmailExists, comparePasswords} from "./auth.service";
 import type { Request, Response } from "express";
 
@@ -31,7 +29,7 @@ export async function login(req: Request, res: Response) {
   });
 }
 export async function register(req: Request, res: Response) {
-    const { name, email, password } = req.body;
+    const { email, password } = req.body;
 
      /* check if the email is already in use */
     if(await checkEmailExists(email)) {
