@@ -43,7 +43,17 @@ export async function register(req: Request, res: Response) {
     res.json({message:"user created successfully"})
 }
 export function logout(req: Request, res: Response) {
-  res.json({ message: "Logout successful" });
+  req.session.destroy((err)=>{
+    if(err){
+        return res.status(500).json({
+            error:"failed to logout"
+        })
+    }
+    res.clearCookie("connect.sid", {path:"/"})
+    return res.status(200).json({
+        message:"Logout successful"
+    })
+  })
 }   
 export function me(req: Request, res: Response) {
   res.json({ message: "User profile" });

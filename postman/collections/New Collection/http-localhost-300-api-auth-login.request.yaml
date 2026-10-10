@@ -5,9 +5,11 @@ url: http://localhost:5642/api/auth/login
 method: POST
 body:
   type: json
-  content: |-
-    {
-      "email": "ya@gmail.com",
-      "password": "testtesttest"
-    }
+  content: "{\r
+
+    \    \"email\":\"a@gmail.com\",\r
+
+    \    \"password\":\"testtesttest\"\r
+
+    }"
 order: 1000
