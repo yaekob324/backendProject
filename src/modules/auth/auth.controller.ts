@@ -1,6 +1,9 @@
+import {pool} from "../../db/pool";
 import { Request, Response } from "express";
 export function login(req: Request, res: Response) {
-  res.json({ message: "Login successful" });
+     /* check if the user exists in the database */
+
+     const { email, password } = req.body;
 }
 export function register(req: Request, res: Response) {
   res.json({ message: "Registration successful" });

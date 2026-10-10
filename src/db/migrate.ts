@@ -12,8 +12,8 @@ export async function runMigrations(){
     `);
 const done = await pool.query("SELECT name FROM migrations");
 const alreadyRan = done.rows.map((row) => row.name);
-
-const folder = path.join(__dirname);
+console.log("already ran migrations:", alreadyRan);
+const folder =__dirname + "/migrations";
 
 const files = fs
 .readdirSync(folder)
