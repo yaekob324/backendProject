@@ -1,14 +1,13 @@
 $kind: http-request
 name: http://localhost:300/api/auth/login
 description: ""
-url: http://localhost:300/api/auth/login
+url: http://localhost:5642/api/auth/login
 method: POST
 body:
   type: json
-  content: |
-    "
-    {  "email": "yaekob@gmail.com",
-        "password": "456123789"
+  content: |-
+    {
+      "email": "ya@gmail.com",
+      "password": "testtesttest"
     }
-    "
 order: 1000

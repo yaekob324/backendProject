@@ -6,12 +6,12 @@ import express from "express";
 
 /* this is to validate the input before processing  */
 import {validator} from "../../middleware/validation.middleware";
-import {loginSchema} from "../../shared/types/types";
-import {registerSchema} from "../../shared/types/types";
+import {loginSchema} from "./auth.schema";
+import {registerSchema} from "./auth.schema";
 
 export const authRouter = express.Router();
 
 authRouter.post("/login",validator(loginSchema), login);
-authRouter.post("/register", register);
+authRouter.post("/register",validator(registerSchema), register);
 authRouter.post("/logout", logout);
 authRouter.get("/me", me);
