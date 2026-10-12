@@ -3,6 +3,7 @@ import {insertCategory} from "./category.repository";
 import {getCategoriesById} from "./category.repository";
 import { AppError } from "../../middleware/error.middleware";
 import { alterCategory } from "./category.repository";
+import { removeCategory } from "./category.repository";
 type categoryParamsType={
     categoryId:string
 }
@@ -29,9 +30,22 @@ export async function updateCategory(request: Request <categoryParamsType>, resp
         throw new AppError(401,"Unauthorized User")
     }
     const updatedResult=await alterCategory(request,categoryId,userId)
+    if(!updatedResult){
+        throw new AppError(404,"Category not found")
+    }
     response.json({message:"category successfully updated",updatedResult})
 
 }
-export function deleteCategory(request: Request, response: Response) {
-    response.json({message: "Category deleted successfully"});
+export async function deleteCategory(request: Request<categoryParamsType>, response: Response) {
+    const {categoryId}=request.params
+    const userId=request.session.userId
+    if(!userId){
+        throw new AppError(401,"Unauthorized User")
+    }
+   const removedRow= await removeCategory(categoryId,userId)
+   console.log(removedRow)
+   if(!removedRow){
+        throw new AppError(404,"Category not found")
+   }
+   response.json({message:"category successfully deleted",removedRow})
 }   

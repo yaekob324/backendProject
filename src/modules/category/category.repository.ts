@@ -57,3 +57,7 @@ export async function alterCategory(
 
   return result.rows[0];
 }
+export async function removeCategory(categoryId:string,userId:string){
+   const result=await pool.query(`DELETE FROM categories WHERE id=$1 AND user_id=$2 RETURNING *`,[categoryId,userId])
+   return result.rows[0];
+}
