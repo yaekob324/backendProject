@@ -1,8 +1,19 @@
 import { Request, Response } from "express";
-import { insertBudget } from "./budget.repository";
+import { alterBudget, insertBudget } from "./budget.repository";
 import { getBudgets } from "./budget.repository";
-export function updateBudget(req: Request, res: Response) {
-  res.json({ message: "Budget updated successfully" });
+
+type budgetParams = {
+budgetId: string;
+}
+
+export async function updateBudget(req: Request<budgetParams>, res: Response) {
+  const budgetId = req.params.budgetId;
+  const userId = req.session.userId;
+  if (!userId) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+  const updatedBudget = await alterBudget(req, budgetId, userId);
+  res.json({ message: "Budget updated successfully", budget: updatedBudget });
 }
 export function deleteBudget(req: Request, res: Response) {
   res.json({ message: "Budget deleted successfully" });
