@@ -1,14 +1,20 @@
 $kind: http-request
 name: http://localhost:300/api/auth/login
 description: ""
-url: http://localhost:5642/api/auth/register
-method: POST
+url: http://localhost:5642/api/v1/budget/get
+method: GET
 body:
   type: json
   content: |-
-    {
-        "email":"test@gmail.com",
-        "password":"testtesttest",
-        "name":"test"
-    }
+    // {
+    //    "amount_cents":1000,
+    //    "start_date":"2027-01-02",
+    //    "end_date":"2027-02-02",
+    //    "category_id": "2516f5a1-ee2f-49f8-aaab-e56e03e2d4c1"
+    // }
+
+    // {
+    //     "name":"lexury",
+    //     "type":"expense"
+    // }
 order: 1000
