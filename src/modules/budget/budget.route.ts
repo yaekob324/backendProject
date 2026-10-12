@@ -10,6 +10,6 @@ import express from "express";
 export const budgetRouter = express.Router();
 /* i will consider adding budget id as a url parameter or query string later */
 budgetRouter.post("/create",validator(budgetSchema),authMiddleware, createBudget);
-budgetRouter.get("/get", getBudget);
-budgetRouter.patch("/update/:budgetId", updateBudget);
-budgetRouter.delete("/delete/:budgetId", deleteBudget);
+budgetRouter.get("/get",authMiddleware, getBudget);
+budgetRouter.patch("/update/:budgetId",authMiddleware, updateBudget);
+budgetRouter.delete("/delete/:budgetId", authMiddleware, deleteBudget);
