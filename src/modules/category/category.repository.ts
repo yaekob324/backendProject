@@ -27,12 +27,10 @@ export async function alterCategory(
       parameterNumber++;
     }
   };
-
-  addField("category_id", req.body.category_id);
+  
   addField("type", req.body.type);
   addField("name",req.body.name)
-  addField("start_date", req.body.start_date);
-  addField("end_date", req.body.end_date);
+  
 
   if (fields.length === 0) {
     throw new AppError(400, "At least one field is required");
