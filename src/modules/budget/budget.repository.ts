@@ -54,3 +54,15 @@ export async function alterBudget(
 
   return result.rows[0];
 }
+export async function removeBudget(budgetId: string, userId: string) {
+  const result = await pool.query(
+    `
+      DELETE FROM budgets
+      WHERE id = $1
+        AND user_id = $2
+      RETURNING *;
+    `,
+    [budgetId, userId]
+  ); 
+  return result.rows[0];
+}
