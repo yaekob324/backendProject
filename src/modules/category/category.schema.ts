@@ -25,3 +25,6 @@ export const categoryUpdateSchema = z
   .refine((data) => Object.keys(data).length > 0, {
     message: "At least one field is required",
   });
+export const categoryParamsSchema = z.object({
+  categoryId: z.string().uuid(),
+});

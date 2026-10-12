@@ -10,7 +10,7 @@ type categoryParamsType={
 
 export async function createCategory(request: Request, response: Response) {
    const category = await insertCategory(request);
-   console.log(category);
+   
     response.json({message: "Category created successfully",category});
 }
 export async function getCategory(request: Request, response: Response) {
@@ -43,9 +43,9 @@ export async function deleteCategory(request: Request<categoryParamsType>, respo
         throw new AppError(401,"Unauthorized User")
     }
    const removedRow= await removeCategory(categoryId,userId)
-   console.log(removedRow)
+  
    if(!removedRow){
         throw new AppError(404,"Category not found")
    }
-   response.json({message:"category successfully deleted",removedRow})
+   response.status(204).send()
 }   

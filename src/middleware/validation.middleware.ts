@@ -18,3 +18,18 @@ export function validator(schema: ZodType) {
     next();
   };
 }
+
+export function paramsValidator(schema: ZodType) {
+  return (req: Request, res: Response, next: NextFunction): void => {
+  const result = schema.safeParse(req.params);
+
+  if (!result.success) {
+    const message = result.error.issues
+      .map((issue) => `${String(issue.path[0])}: ${issue.message}`)
+      .join(", ");
+    throw new AppError(400, message);
+  }
+  
+  next();
+}
+}
