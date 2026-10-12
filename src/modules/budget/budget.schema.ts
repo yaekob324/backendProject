@@ -12,4 +12,6 @@ export const budgetUpdateSchema = z.object({
     amount_cents: z.number().int().nonnegative("amount_cents should be a non-negative integer").optional(),
     start_date: z.string().date("start_date should be a valid date").optional(),
     end_date: z.string().date("end_date should be a valid date").optional()
+}).refine((data)=>Object.keys(data).length>0,{
+    message:"At least one field is required"
 });

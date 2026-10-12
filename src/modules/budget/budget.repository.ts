@@ -1,7 +1,7 @@
 import { Request } from "express";
 import { pool } from "../../db/pool";
-export async function insertBudget(req: Request){
-   const result= await pool.query("INSERT INTO budgets (user_id,category_id, amount_cents, start_date, end_date) VALUES ($1, $2, $3, $4, $5) RETURNING *", [req.session.userId, req.body.category_id, req.body.amount_cents, req.body.start_date, req.body.end_date]    );
+export async function insertBudget(req: Request,userId:string){
+   const result= await pool.query("INSERT INTO budgets (user_id,category_id, amount_cents, start_date, end_date) VALUES ($1, $2, $3, $4, $5) WHERE user_id = $6 RETURNING *", [req.session.userId, req.body.category_id, req.body.amount_cents, req.body.start_date, req.body.end_date, userId]    );
     return result.rows[0];
 }
 
