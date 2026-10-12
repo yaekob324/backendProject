@@ -9,5 +9,5 @@ export function getBudget(req: Request, res: Response) {
   res.json({ message: "Budget retrieved successfully" });
 }  
 export function createBudget(req: Request, res: Response) {
-  res.json({ message: "Budget created successfully" });
+  
 }
