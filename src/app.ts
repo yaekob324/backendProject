@@ -9,6 +9,7 @@ import { budgetRouter } from "./modules/budget/budget.route";
 import { categoryRouter } from "./modules/category/category.route";
 import { reportRouter } from "./modules/report/report.route";
 import {transactionRouter} from "./modules/transaction/transaction.route";
+import { errorHandler } from "./middleware/error.middleware";
 
 const PostgreSqlStore = connectPgSimple(session);
 const sesssion_secret=process.env.SESSION_SECRET || "this is a default session secret, please change it in production";
@@ -41,3 +42,4 @@ app.use("/api/v1/budget", budgetRouter);
 app.use("/api/v1/category", categoryRouter);
 app.use("/api/v1/transaction", transactionRouter);
 app.use("/api/v1/report", reportRouter);
+app.use(errorHandler);
