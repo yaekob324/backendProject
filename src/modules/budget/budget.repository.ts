@@ -2,7 +2,22 @@ import { Request } from "express";
 import { pool } from "../../db/pool";
 import { AppError } from "../../middleware/error.middleware";
 export async function insertBudget(req: Request,userId:string){
-   const result= await pool.query("INSERT INTO budgets (user_id,category_id, amount_cents, start_date, end_date) VALUES ($1, $2, $3, $4, $5) WHERE user_id = $6 RETURNING *", [req.session.userId, req.body.category_id, req.body.amount_cents, req.body.start_date, req.body.end_date, userId]    );
+const result = await pool.query(
+  `INSERT INTO budgets
+    (user_id, category_id, amount_cents, start_date, end_date)
+   SELECT $1, c.id, $3, $4, $5
+   FROM categories c
+   WHERE c.id = $2
+     AND c.user_id = $1
+   RETURNING *`,
+  [
+    userId,
+    req.body.category_id,
+    req.body.amount_cents,
+    req.body.start_date,
+    req.body.end_date,
+  ]
+);
     return result.rows[0];
 }
 
