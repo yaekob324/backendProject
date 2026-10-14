@@ -6,3 +6,6 @@ export const transactionSchema = z.object({
     type: z.enum(["income", "expense"]),
     description: z.string().min(2, "description should be greater than two characters long").trim()
 });
+export const transactionParamsSchema = z.object({
+    transactionId: z.string().uuid("transactionId should be a valid uuid")
+});
