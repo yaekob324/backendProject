@@ -8,11 +8,21 @@ import {paramsValidator} from "../../middleware/validation.middleware";
 import {validator} from "../../middleware/validation.middleware";
 import {authMiddleware} from "../../middleware/auth.middleware";
 import express from "express"; 
-import { createTransaction } from "./transaction.repository";
 
 export const transactionRouter = express.Router();
-transactionRouter.post("/create",validator(transactionSchema),authMiddleware, createTransactionController);
-transactionRouter.get("/get/:transactionId",paramsValidator(transactionParamsSchema), authMiddleware, getTransaction);
-transactionRouter.patch("/update/:transactionId",validator(transactionUpdateSchema), authMiddleware, updateTransaction);
-transactionRouter.delete("/delete/:transactionId",authMiddleware, deleteTransaction);
-transactionRouter.get("/get-all",authMiddleware, getAllTransactions);
+transactionRouter.post("/create", authMiddleware, validator(transactionSchema), createTransactionController);
+transactionRouter.get("/get/:transactionId", authMiddleware, paramsValidator(transactionParamsSchema), getTransaction);
+transactionRouter.patch(
+  "/update/:transactionId",
+  authMiddleware,
+  paramsValidator(transactionParamsSchema),
+  validator(transactionUpdateSchema),
+  updateTransaction
+);
+transactionRouter.delete(
+  "/delete/:transactionId",
+  authMiddleware,
+  paramsValidator(transactionParamsSchema),
+  deleteTransaction
+);
+transactionRouter.get("/get-all", authMiddleware, getAllTransactions);

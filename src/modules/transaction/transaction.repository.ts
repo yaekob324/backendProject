@@ -9,8 +9,8 @@ export async function createTransaction({userId, category_id, amount_cents, type
  description: string;
 }) {
  const result= await pool.query(
-   "INSERT INTO transactions (user_id, category_id, amount_cents, type, description) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-   [userId, category_id, amount_cents, type, description]
+   "INSERT INTO transactions (user_id, category_id, amount_cents, type, description) VALUES ($1, $2, $3, $4, $5) WHERE user_id = $6 RETURNING *",
+   [userId, category_id, amount_cents, type, description, userId]
  );
  return result.rows[0];
 }
@@ -38,6 +38,10 @@ export async function alterTransaction(
       parameterNumber++;
     }
   };
+
+  if(req.body.length==0){
+    throw new AppError(400, "At least one field is required");
+  }
   
   addField("type", req.body.type);
   addField("category_id", req.body.category_id);

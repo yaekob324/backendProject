@@ -11,7 +11,7 @@ import {categoryParamsSchema} from './category.schema'
 import express from "express";
 
 export const categoryRouter = express.Router();
-categoryRouter.post("/create", validator(categorySchema), authMiddleware, createCategory);
+categoryRouter.post("/create", authMiddleware, validator(categorySchema), createCategory);
 categoryRouter.get("/get",authMiddleware, getCategory);
-categoryRouter.patch("/update/:categoryId",validator(categoryUpdateSchema),paramsValidator(categoryParamsSchema),authMiddleware, updateCategory);
+categoryRouter.patch("/update/:categoryId",authMiddleware,paramsValidator(categoryParamsSchema),validator(categoryUpdateSchema), updateCategory);
 categoryRouter.delete("/delete/:categoryId",authMiddleware,paramsValidator(categoryParamsSchema), deleteCategory);
