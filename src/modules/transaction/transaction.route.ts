@@ -14,5 +14,5 @@ export const transactionRouter = express.Router();
 transactionRouter.post("/create",validator(transactionSchema),authMiddleware, createTransactionController);
 transactionRouter.get("/get/:transactionId",paramsValidator(transactionParamsSchema), authMiddleware, getTransaction);
 transactionRouter.patch("/update/:transactionId",validator(transactionUpdateSchema), authMiddleware, updateTransaction);
-transactionRouter.delete("/delete/:transactionId", deleteTransaction);
+transactionRouter.delete("/delete/:transactionId",authMiddleware, deleteTransaction);
 transactionRouter.get("/get-all", getAllTransactions);

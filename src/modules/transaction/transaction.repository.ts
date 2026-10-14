@@ -63,3 +63,10 @@ export async function alterTransaction(
 
   return result.rows[0];
 }
+export async function removeTransaction(transactionId: string, userId: string) {
+  const result = await pool.query(
+    "DELETE FROM transactions WHERE id = $1 AND user_id = $2 RETURNING *",
+    [transactionId, userId]
+  );
+  return result.rows[0];
+}
