@@ -9,8 +9,16 @@ export async function createTransaction({userId, category_id, amount_cents, type
  description: string;
 }) {
  const result= await pool.query(
-   "INSERT INTO transactions (user_id, category_id, amount_cents, type, description) VALUES ($1, $2, $3, $4, $5) WHERE user_id = $6 RETURNING *",
-   [userId, category_id, amount_cents, type, description, userId]
+   `
+     INSERT INTO transactions
+       (user_id, category_id, amount_cents, type, description)
+     SELECT $1, c.id, $3, $4, $5
+     FROM categories c
+     WHERE c.id = $2
+       AND c.user_id = $1
+     RETURNING *;
+   `,
+   [userId, category_id, amount_cents, type, description]
  );
  return result.rows[0];
 }
@@ -74,8 +82,9 @@ export async function removeTransaction(transactionId: string, userId: string) {
   );
   return result.rows[0];
 }
-export async function getAllTransactionsByUserId(userId: string) {
-  const result = await pool.query(
-    "SELECT * FROM transactions WHERE user_id = $1",[userId])
- return result.rows;
+export async function paginatedTransactionsByUserId(userId:string,limit:number,offset:number){
+    const result=await pool.query(
+        "SELECT * FROM transactions WHERE user_id=$1 ORDER BY created_at DESC LIMIT $2 OFFSET $3",[userId,limit,offset]
+    )
+    return result.rows;
 }

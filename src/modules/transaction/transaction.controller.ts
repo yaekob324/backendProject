@@ -4,7 +4,7 @@ import {AppError} from "../../middleware/error.middleware";
 import {getTransactionById} from "./transaction.repository";
 import {alterTransaction} from "./transaction.repository";
 import {removeTransaction} from "./transaction.repository";
-import { getAllTransactionsByUserId } from "./transaction.repository";
+import { paginatedTransactionsByUserId } from "./transaction.repository";
 
 type transactionParamsType={
     transactionId:string
@@ -33,7 +33,7 @@ export async function createTransactionController(req: Request, res: Response) {
         description
     });
     if(!transaction){
-        throw new AppError(500, "Transaction creation failed");
+        throw new AppError(404, "Category not found");
     }
     res.json({message: "Transaction created successfully", transaction});
 } 
@@ -75,15 +75,31 @@ export async function deleteTransaction(req: Request<transactionParamsType>, res
     }
     res.status(204).send();
 }
-export async function getAllTransactions(req: Request, res: Response) {
-    const userId = req.session.userId;
-    if(!userId){
+export async function getAllTransactions(
+    req: Request<Record<string, never>, any, unknown, { page?: string; limit?: string }>,
+    res: Response
+) {
+     const userId = req.session.userId;
+
+     if(!userId){
         throw new AppError(401, "Unauthorized user");
     }
-    const allTransaction=await getAllTransactionsByUserId(userId)
 
-    if(!allTransaction){
-        throw new AppError(404,"Transactions not found")
+    const page = Number(req.query.page || 1);
+    const limit = Math.min(Number(req.query.limit || 10), 100);
+    const offset = (page - 1) * limit;
+    const fetchedTransactions = await paginatedTransactionsByUserId(userId, limit + 1, offset);
+
+    if (fetchedTransactions.length === 0) {
+        throw new AppError(404, "Transactions not found");
     }
-    res.json({message:"Transactions retrieved successfully", allTransaction})
+
+    const hasNextPage = fetchedTransactions.length > limit;
+    const paginatedTransactions = fetchedTransactions.slice(0, limit);
+
+    res.json({
+        message: "Transactions retrieved successfully",
+        paginatedTransactions,
+        hasNextPage
+    });
 }
