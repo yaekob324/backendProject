@@ -1,6 +1,33 @@
 import {Request, Response} from "express";
-export function createTransaction(req: Request, res: Response) {
-    res.json({message: "Transaction created successfully"});
+import {createTransaction} from "./transaction.repository";
+import {AppError} from "../../middleware/error.middleware";
+export async function createTransactionController(req: Request, res: Response) {
+    const {category_id, amount_cents, type, description} = req.body;
+    const userId = req.session.userId;
+    if(!userId){
+        throw new AppError(401, "Unauthorized user");
+    }
+    if(amount_cents <= 0){
+        throw new AppError(400, "Amount must be greater than zero");
+    }
+    if(!category_id){
+        throw new AppError(400, "Category is required");
+    }
+   
+    if(!description){
+        throw new AppError(400, "Description is required");
+    }
+    const transaction = await createTransaction({
+        userId,
+        category_id,
+        amount_cents,
+        type,
+        description
+    });
+    if(!transaction){
+        throw new AppError(500, "Transaction creation failed");
+    }
+    res.json({message: "Transaction created successfully", transaction});
 } 
 export function getTransaction(req: Request, res: Response) {
     res.json({message: "Transaction retrieved successfully"});
