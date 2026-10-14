@@ -4,6 +4,7 @@ import {AppError} from "../../middleware/error.middleware";
 import {getTransactionById} from "./transaction.repository";
 import {alterTransaction} from "./transaction.repository";
 import {removeTransaction} from "./transaction.repository";
+import { getAllTransactionsByUserId } from "./transaction.repository";
 
 type transactionParamsType={
     transactionId:string
@@ -74,6 +75,15 @@ export async function deleteTransaction(req: Request<transactionParamsType>, res
     }
     res.status(204).send();
 }
-export function getAllTransactions(req: Request, res: Response) {
-    res.json({message: "All transactions retrieved successfully"});
+export async function getAllTransactions(req: Request, res: Response) {
+    const userId = req.session.userId;
+    if(!userId){
+        throw new AppError(401, "Unauthorized user");
+    }
+    const allTransaction=await getAllTransactionsByUserId(userId)
+
+    if(!allTransaction){
+        throw new AppError(404,"Transactions not found")
+    }
+    res.json({message:"Transactions retrieved successfully", allTransaction})
 }

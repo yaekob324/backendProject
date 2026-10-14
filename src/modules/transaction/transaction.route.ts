@@ -15,4 +15,4 @@ transactionRouter.post("/create",validator(transactionSchema),authMiddleware, cr
 transactionRouter.get("/get/:transactionId",paramsValidator(transactionParamsSchema), authMiddleware, getTransaction);
 transactionRouter.patch("/update/:transactionId",validator(transactionUpdateSchema), authMiddleware, updateTransaction);
 transactionRouter.delete("/delete/:transactionId",authMiddleware, deleteTransaction);
-transactionRouter.get("/get-all", getAllTransactions);
+transactionRouter.get("/get-all",authMiddleware, getAllTransactions);

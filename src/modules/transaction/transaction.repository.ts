@@ -70,3 +70,8 @@ export async function removeTransaction(transactionId: string, userId: string) {
   );
   return result.rows[0];
 }
+export async function getAllTransactionsByUserId(userId: string) {
+  const result = await pool.query(
+    "SELECT * FROM transactions WHERE user_id = $1",[userId])
+ return result.rows;
+}
