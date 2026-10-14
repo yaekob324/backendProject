@@ -6,6 +6,12 @@ export async function insertCategory(req: Request) {
    return result.rows[0];
 }
 
+export async function checkName(name:string,userId:string){
+      const result=await pool.query("SELECT * FROM categories WHERE user_id =$1 AND name=$2",[userId,name])
+
+      return result.rows[0] ? true : false;
+}
+
 export async function getCategoriesById(userId:string){
    const result = await pool.query("SELECT * FROM categories WHERE user_id = $1", [userId]);
    return result.rows;
@@ -45,7 +51,7 @@ export async function alterCategory(
   const result = await pool.query(
     `
       UPDATE categories
-      SET ${fields.join(", ")}
+      SET ${fields.join(", ")}, updated_at = CURRENT_TIMESTAMP
       WHERE id = $${budgetIdParameter}
         AND user_id = $${userIdParameter}
       RETURNING *;

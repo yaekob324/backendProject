@@ -4,11 +4,22 @@ import {getCategoriesById} from "./category.repository";
 import { AppError } from "../../middleware/error.middleware";
 import { alterCategory } from "./category.repository";
 import { removeCategory } from "./category.repository";
+import { checkName } from "./category.repository";
 type categoryParamsType={
     categoryId:string
 }
 
 export async function createCategory(request: Request, response: Response) {
+
+    const userId=request.session.userId
+    const name=request.body.name
+    if(!userId){
+        throw new AppError(401,"Unauthorized User")
+    }
+    if( await checkName(name,userId)){
+        throw new AppError(409,"conflicting name")
+    }
+
    const category = await insertCategory(request);
    
     response.json({message: "Category created successfully",category});
@@ -26,8 +37,12 @@ export async function getCategory(request: Request, response: Response) {
 export async function updateCategory(request: Request <categoryParamsType>, response: Response) {
     const {categoryId}=request.params
     const userId=request.session.userId
+    const name=request.body.name
     if(!userId){
         throw new AppError(401,"Unauthorized User")
+    }
+    if(await checkName(name,userId)){
+        throw new AppError(409,"confilicting name")
     }
     const updatedResult=await alterCategory(request,categoryId,userId)
     if(!updatedResult){
